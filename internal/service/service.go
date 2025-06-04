@@ -12,10 +12,21 @@ type Service struct {
 }
 
 func NewService() *Service {
+	svc := &Service{}
+	initBaseLog(svc)
+	initWebLog(svc)
+	return svc
+}
+
+func initBaseLog(svc *Service) {
 	log := logger.NewLogger(os.Stdout)
-	webLogger := logger.NewWebLogger(os.Stdout, &slog.HandlerOptions{
+	svc.BaseLogger = log
+}
+
+func initWebLog(svc *Service) {
+	log := logger.NewWebLogger(os.Stdout, &slog.HandlerOptions{
 		AddSource: true,
 		Level:     slog.LevelDebug,
 	})
-	return &Service{BaseLogger: log, WebLogger: webLogger}
+	svc.WebLogger = log
 }

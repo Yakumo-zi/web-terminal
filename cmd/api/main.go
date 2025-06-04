@@ -18,6 +18,6 @@ func main() {
 	svc := service.NewService()
 	api.RegisterRoutes(e, svc)
 
-	svc.BaseLogger.Error("api server listening on 127.0.0.1:"+strconv.Itoa(ApiServerPort),
+	svc.BaseLogger.Error("api api listening on 127.0.0.1:"+strconv.Itoa(ApiServerPort),
 		slog.Any("error", e.Start(fmt.Sprintf(":%d", ApiServerPort))))
 }
