@@ -2,8 +2,8 @@ package api
 
 import (
 	"fmt"
+	"github.com/Yakumo-zi/web-terminal/internal/service"
 	"github.com/Yakumo-zi/web-terminal/internal/web/middlewares"
-	"github.com/Yakumo-zi/web-terminal/service"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )

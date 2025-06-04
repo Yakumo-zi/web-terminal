@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/Yakumo-zi/web-terminal/api"
-	"github.com/Yakumo-zi/web-terminal/service"
+	"github.com/Yakumo-zi/web-terminal/internal/api"
+	"github.com/Yakumo-zi/web-terminal/internal/service"
 	"github.com/labstack/echo/v4"
 	"log/slog"
 	"strconv"
