@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"context"
-	"github.com/Yakumo-zi/web-terminal/internal/web/constants"
+	"github.com/Yakumo-zi/web-terminal/pkg/web/constants"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"log/slog"
@@ -13,11 +13,11 @@ func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			ctx := c.Request().Context()
-			uuid, err := uuid.NewUUID()
+			requestId, err := uuid.NewUUID()
 			if err != nil {
 				return err
 			}
-			ctx = context.WithValue(ctx, constants.CtxRequestIdKey, uuid.String())
+			ctx = context.WithValue(ctx, constants.CtxRequestIdKey, requestId.String())
 			ctx = context.WithValue(ctx, constants.CtxMethodKey, c.Request().Method)
 			ctx = context.WithValue(ctx, constants.CtxPathKey, c.Request().URL.Path)
 			start := time.Now()

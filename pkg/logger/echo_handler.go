@@ -2,7 +2,7 @@ package logger
 
 import (
 	"context"
-	"github.com/Yakumo-zi/web-terminal/internal/web/constants"
+	"github.com/Yakumo-zi/web-terminal/pkg/web/constants"
 	"log/slog"
 )
 
