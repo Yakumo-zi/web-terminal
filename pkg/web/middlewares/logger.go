@@ -27,7 +27,7 @@ func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 				logger.ErrorContext(ctx, "api request error",
 					slog.Int("status_code", c.Response().Status),
 					slog.Any("error", err),
-					slog.Int64("latency", int64(end.Sub(start).Milliseconds())),
+					slog.Int64("latency", end.Sub(start).Milliseconds()),
 				)
 				c.Error(err)
 				return err
@@ -35,7 +35,7 @@ func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 			end := time.Now()
 			logger.InfoContext(ctx, "api request success",
 				slog.Int("status_code", c.Response().Status),
-				slog.Int64("latency", int64(end.Sub(start).Milliseconds())),
+				slog.Int64("latency", end.Sub(start).Milliseconds()),
 			)
 			return nil
 		}
