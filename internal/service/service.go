@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/Yakumo-zi/web-terminal/internal/logger"
+	"github.com/Yakumo-zi/web-terminal/pkg/logger"
 	"log/slog"
 	"os"
 )
