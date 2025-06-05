@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ApiServerPort = 8000
+	ApiServerPort = 8001
 )
 
 func main() {

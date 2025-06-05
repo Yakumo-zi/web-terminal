@@ -12,16 +12,16 @@ import (
 func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			requestId := c.Request().Header.Get("X-Request-ID")
 			ctx := c.Request().Context()
-			requestId, err := uuid.NewUUID()
-			if err != nil {
-				return err
+			if len(requestId) == 0 {
+				requestId = uuid.NewString()
 			}
-			ctx = context.WithValue(ctx, constants.CtxRequestIdKey, requestId.String())
+			ctx = context.WithValue(ctx, constants.CtxRequestIdKey, requestId)
 			ctx = context.WithValue(ctx, constants.CtxMethodKey, c.Request().Method)
 			ctx = context.WithValue(ctx, constants.CtxPathKey, c.Request().URL.Path)
 			start := time.Now()
-			err = next(c)
+			err := next(c)
 			if err != nil {
 				end := time.Now()
 				logger.ErrorContext(ctx, "api request error",
