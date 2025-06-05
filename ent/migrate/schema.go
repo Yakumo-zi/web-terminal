@@ -10,7 +10,7 @@ import (
 var (
 	// AssetsColumns holds the columns for the "assets" table.
 	AssetsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "type", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "ip", Type: field.TypeString, Unique: true},
@@ -26,8 +26,8 @@ var (
 	}
 	// AssetGroupsColumns holds the columns for the "asset_groups" table.
 	AssetGroupsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
-		{Name: "name", Type: field.TypeString},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}
@@ -39,7 +39,7 @@ var (
 	}
 	// AssetGroupAttributesColumns holds the columns for the "asset_group_attributes" table.
 	AssetGroupAttributesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "key", Type: field.TypeString},
 		{Name: "value", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
@@ -63,7 +63,7 @@ var (
 	}
 	// CredentialsColumns holds the columns for the "credentials" table.
 	CredentialsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "username", Type: field.TypeString},
 		{Name: "secret", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
@@ -87,7 +87,7 @@ var (
 	}
 	// SessionsColumns holds the columns for the "sessions" table.
 	SessionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "status", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},

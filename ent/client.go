@@ -380,7 +380,8 @@ func (c *AssetClient) QueryCredentials(a *Asset) *CredentialQuery {
 
 // Hooks returns the client hooks.
 func (c *AssetClient) Hooks() []Hook {
-	return c.hooks.Asset
+	hooks := c.hooks.Asset
+	return append(hooks[:len(hooks):len(hooks)], asset.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -545,7 +546,8 @@ func (c *AssetGroupClient) QueryAttrs(ag *AssetGroup) *AssetGroupAttributeQuery 
 
 // Hooks returns the client hooks.
 func (c *AssetGroupClient) Hooks() []Hook {
-	return c.hooks.AssetGroup
+	hooks := c.hooks.AssetGroup
+	return append(hooks[:len(hooks):len(hooks)], assetgroup.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -694,7 +696,8 @@ func (c *AssetGroupAttributeClient) QueryGroup(aga *AssetGroupAttribute) *AssetG
 
 // Hooks returns the client hooks.
 func (c *AssetGroupAttributeClient) Hooks() []Hook {
-	return c.hooks.AssetGroupAttribute
+	hooks := c.hooks.AssetGroupAttribute
+	return append(hooks[:len(hooks):len(hooks)], assetgroupattribute.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -827,7 +830,8 @@ func (c *CredentialClient) GetX(ctx context.Context, id uuid.UUID) *Credential {
 
 // Hooks returns the client hooks.
 func (c *CredentialClient) Hooks() []Hook {
-	return c.hooks.Credential
+	hooks := c.hooks.Credential
+	return append(hooks[:len(hooks):len(hooks)], credential.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -992,7 +996,8 @@ func (c *SessionClient) QueryCredential(s *Session) *CredentialQuery {
 
 // Hooks returns the client hooks.
 func (c *SessionClient) Hooks() []Hook {
-	return c.hooks.Session
+	hooks := c.hooks.Session
+	return append(hooks[:len(hooks):len(hooks)], session.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

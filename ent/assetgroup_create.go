@@ -35,9 +35,25 @@ func (agc *AssetGroupCreate) SetCreatedAt(t time.Time) *AssetGroupCreate {
 	return agc
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (agc *AssetGroupCreate) SetNillableCreatedAt(t *time.Time) *AssetGroupCreate {
+	if t != nil {
+		agc.SetCreatedAt(*t)
+	}
+	return agc
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (agc *AssetGroupCreate) SetUpdatedAt(t time.Time) *AssetGroupCreate {
 	agc.mutation.SetUpdatedAt(t)
+	return agc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (agc *AssetGroupCreate) SetNillableUpdatedAt(t *time.Time) *AssetGroupCreate {
+	if t != nil {
+		agc.SetUpdatedAt(*t)
+	}
 	return agc
 }
 
@@ -84,6 +100,9 @@ func (agc *AssetGroupCreate) Mutation() *AssetGroupMutation {
 
 // Save creates the AssetGroup in the database.
 func (agc *AssetGroupCreate) Save(ctx context.Context) (*AssetGroup, error) {
+	if err := agc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, agc.sqlSave, agc.mutation, agc.hooks)
 }
 
@@ -107,6 +126,25 @@ func (agc *AssetGroupCreate) ExecX(ctx context.Context) {
 	if err := agc.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (agc *AssetGroupCreate) defaults() error {
+	if _, ok := agc.mutation.CreatedAt(); !ok {
+		if assetgroup.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized assetgroup.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := assetgroup.DefaultCreatedAt()
+		agc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := agc.mutation.UpdatedAt(); !ok {
+		if assetgroup.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized assetgroup.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := assetgroup.DefaultUpdatedAt()
+		agc.mutation.SetUpdatedAt(v)
+	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -220,6 +258,7 @@ func (agcb *AssetGroupCreateBulk) Save(ctx context.Context) ([]*AssetGroup, erro
 	for i := range agcb.builders {
 		func(i int, root context.Context) {
 			builder := agcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AssetGroupMutation)
 				if !ok {

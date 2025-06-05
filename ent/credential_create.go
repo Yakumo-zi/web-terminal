@@ -45,9 +45,25 @@ func (cc *CredentialCreate) SetCreatedAt(t time.Time) *CredentialCreate {
 	return cc
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (cc *CredentialCreate) SetNillableCreatedAt(t *time.Time) *CredentialCreate {
+	if t != nil {
+		cc.SetCreatedAt(*t)
+	}
+	return cc
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (cc *CredentialCreate) SetUpdatedAt(t time.Time) *CredentialCreate {
 	cc.mutation.SetUpdatedAt(t)
+	return cc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (cc *CredentialCreate) SetNillableUpdatedAt(t *time.Time) *CredentialCreate {
+	if t != nil {
+		cc.SetUpdatedAt(*t)
+	}
 	return cc
 }
 
@@ -64,6 +80,9 @@ func (cc *CredentialCreate) Mutation() *CredentialMutation {
 
 // Save creates the Credential in the database.
 func (cc *CredentialCreate) Save(ctx context.Context) (*Credential, error) {
+	if err := cc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, cc.sqlSave, cc.mutation, cc.hooks)
 }
 
@@ -87,6 +106,25 @@ func (cc *CredentialCreate) ExecX(ctx context.Context) {
 	if err := cc.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (cc *CredentialCreate) defaults() error {
+	if _, ok := cc.mutation.CreatedAt(); !ok {
+		if credential.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized credential.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := credential.DefaultCreatedAt()
+		cc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := cc.mutation.UpdatedAt(); !ok {
+		if credential.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized credential.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := credential.DefaultUpdatedAt()
+		cc.mutation.SetUpdatedAt(v)
+	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -182,6 +220,7 @@ func (ccb *CredentialCreateBulk) Save(ctx context.Context) ([]*Credential, error
 	for i := range ccb.builders {
 		func(i int, root context.Context) {
 			builder := ccb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*CredentialMutation)
 				if !ok {

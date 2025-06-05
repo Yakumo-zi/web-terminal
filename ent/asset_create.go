@@ -53,9 +53,25 @@ func (ac *AssetCreate) SetCreatedAt(t time.Time) *AssetCreate {
 	return ac
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ac *AssetCreate) SetNillableCreatedAt(t *time.Time) *AssetCreate {
+	if t != nil {
+		ac.SetCreatedAt(*t)
+	}
+	return ac
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (ac *AssetCreate) SetUpdatedAt(t time.Time) *AssetCreate {
 	ac.mutation.SetUpdatedAt(t)
+	return ac
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (ac *AssetCreate) SetNillableUpdatedAt(t *time.Time) *AssetCreate {
+	if t != nil {
+		ac.SetUpdatedAt(*t)
+	}
 	return ac
 }
 
@@ -102,6 +118,9 @@ func (ac *AssetCreate) Mutation() *AssetMutation {
 
 // Save creates the Asset in the database.
 func (ac *AssetCreate) Save(ctx context.Context) (*Asset, error) {
+	if err := ac.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, ac.sqlSave, ac.mutation, ac.hooks)
 }
 
@@ -125,6 +144,25 @@ func (ac *AssetCreate) ExecX(ctx context.Context) {
 	if err := ac.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (ac *AssetCreate) defaults() error {
+	if _, ok := ac.mutation.CreatedAt(); !ok {
+		if asset.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized asset.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := asset.DefaultCreatedAt()
+		ac.mutation.SetCreatedAt(v)
+	}
+	if _, ok := ac.mutation.UpdatedAt(); !ok {
+		if asset.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized asset.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := asset.DefaultUpdatedAt()
+		ac.mutation.SetUpdatedAt(v)
+	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -259,6 +297,7 @@ func (acb *AssetCreateBulk) Save(ctx context.Context) ([]*Asset, error) {
 	for i := range acb.builders {
 		func(i int, root context.Context) {
 			builder := acb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AssetMutation)
 				if !ok {

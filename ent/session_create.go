@@ -47,9 +47,25 @@ func (sc *SessionCreate) SetUpdatedAt(t time.Time) *SessionCreate {
 	return sc
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (sc *SessionCreate) SetNillableUpdatedAt(t *time.Time) *SessionCreate {
+	if t != nil {
+		sc.SetUpdatedAt(*t)
+	}
+	return sc
+}
+
 // SetStopedAt sets the "stoped_at" field.
 func (sc *SessionCreate) SetStopedAt(t time.Time) *SessionCreate {
 	sc.mutation.SetStopedAt(t)
+	return sc
+}
+
+// SetNillableStopedAt sets the "stoped_at" field if the given value is not nil.
+func (sc *SessionCreate) SetNillableStopedAt(t *time.Time) *SessionCreate {
+	if t != nil {
+		sc.SetStopedAt(*t)
+	}
 	return sc
 }
 
@@ -104,6 +120,9 @@ func (sc *SessionCreate) Mutation() *SessionMutation {
 
 // Save creates the Session in the database.
 func (sc *SessionCreate) Save(ctx context.Context) (*Session, error) {
+	if err := sc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, sc.sqlSave, sc.mutation, sc.hooks)
 }
 
@@ -127,6 +146,25 @@ func (sc *SessionCreate) ExecX(ctx context.Context) {
 	if err := sc.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (sc *SessionCreate) defaults() error {
+	if _, ok := sc.mutation.UpdatedAt(); !ok {
+		if session.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized session.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := session.DefaultUpdatedAt()
+		sc.mutation.SetUpdatedAt(v)
+	}
+	if _, ok := sc.mutation.StopedAt(); !ok {
+		if session.DefaultStopedAt == nil {
+			return fmt.Errorf("ent: uninitialized session.DefaultStopedAt (forgotten import ent/runtime?)")
+		}
+		v := session.DefaultStopedAt()
+		sc.mutation.SetStopedAt(v)
+	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -256,6 +294,7 @@ func (scb *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
 	for i := range scb.builders {
 		func(i int, root context.Context) {
 			builder := scb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*SessionMutation)
 				if !ok {

@@ -2,7 +2,82 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/Yakumo-zi/web-terminal/ent/runtime.go
+import (
+	"time"
+
+	"github.com/Yakumo-zi/web-terminal/ent/asset"
+	"github.com/Yakumo-zi/web-terminal/ent/assetgroup"
+	"github.com/Yakumo-zi/web-terminal/ent/assetgroupattribute"
+	"github.com/Yakumo-zi/web-terminal/ent/credential"
+	"github.com/Yakumo-zi/web-terminal/ent/schema"
+	"github.com/Yakumo-zi/web-terminal/ent/session"
+)
+
+// The init function reads all schema descriptors with runtime code
+// (default values, validators, hooks and policies) and stitches it
+// to their package variables.
+func init() {
+	assetHooks := schema.Asset{}.Hooks()
+	asset.Hooks[0] = assetHooks[0]
+	assetFields := schema.Asset{}.Fields()
+	_ = assetFields
+	// assetDescCreatedAt is the schema descriptor for created_at field.
+	assetDescCreatedAt := assetFields[5].Descriptor()
+	// asset.DefaultCreatedAt holds the default value on creation for the created_at field.
+	asset.DefaultCreatedAt = assetDescCreatedAt.Default.(func() time.Time)
+	// assetDescUpdatedAt is the schema descriptor for updated_at field.
+	assetDescUpdatedAt := assetFields[6].Descriptor()
+	// asset.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	asset.DefaultUpdatedAt = assetDescUpdatedAt.Default.(func() time.Time)
+	assetgroupHooks := schema.AssetGroup{}.Hooks()
+	assetgroup.Hooks[0] = assetgroupHooks[0]
+	assetgroupFields := schema.AssetGroup{}.Fields()
+	_ = assetgroupFields
+	// assetgroupDescCreatedAt is the schema descriptor for created_at field.
+	assetgroupDescCreatedAt := assetgroupFields[2].Descriptor()
+	// assetgroup.DefaultCreatedAt holds the default value on creation for the created_at field.
+	assetgroup.DefaultCreatedAt = assetgroupDescCreatedAt.Default.(func() time.Time)
+	// assetgroupDescUpdatedAt is the schema descriptor for updated_at field.
+	assetgroupDescUpdatedAt := assetgroupFields[3].Descriptor()
+	// assetgroup.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	assetgroup.DefaultUpdatedAt = assetgroupDescUpdatedAt.Default.(func() time.Time)
+	assetgroupattributeHooks := schema.AssetGroupAttribute{}.Hooks()
+	assetgroupattribute.Hooks[0] = assetgroupattributeHooks[0]
+	assetgroupattributeFields := schema.AssetGroupAttribute{}.Fields()
+	_ = assetgroupattributeFields
+	// assetgroupattributeDescCreatedAt is the schema descriptor for created_at field.
+	assetgroupattributeDescCreatedAt := assetgroupattributeFields[4].Descriptor()
+	// assetgroupattribute.DefaultCreatedAt holds the default value on creation for the created_at field.
+	assetgroupattribute.DefaultCreatedAt = assetgroupattributeDescCreatedAt.Default.(func() time.Time)
+	// assetgroupattributeDescUpdatedAt is the schema descriptor for updated_at field.
+	assetgroupattributeDescUpdatedAt := assetgroupattributeFields[5].Descriptor()
+	// assetgroupattribute.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	assetgroupattribute.DefaultUpdatedAt = assetgroupattributeDescUpdatedAt.Default.(func() time.Time)
+	credentialHooks := schema.Credential{}.Hooks()
+	credential.Hooks[0] = credentialHooks[0]
+	credentialFields := schema.Credential{}.Fields()
+	_ = credentialFields
+	// credentialDescCreatedAt is the schema descriptor for created_at field.
+	credentialDescCreatedAt := credentialFields[4].Descriptor()
+	// credential.DefaultCreatedAt holds the default value on creation for the created_at field.
+	credential.DefaultCreatedAt = credentialDescCreatedAt.Default.(func() time.Time)
+	// credentialDescUpdatedAt is the schema descriptor for updated_at field.
+	credentialDescUpdatedAt := credentialFields[5].Descriptor()
+	// credential.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	credential.DefaultUpdatedAt = credentialDescUpdatedAt.Default.(func() time.Time)
+	sessionHooks := schema.Session{}.Hooks()
+	session.Hooks[0] = sessionHooks[0]
+	sessionFields := schema.Session{}.Fields()
+	_ = sessionFields
+	// sessionDescUpdatedAt is the schema descriptor for updated_at field.
+	sessionDescUpdatedAt := sessionFields[4].Descriptor()
+	// session.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	session.DefaultUpdatedAt = sessionDescUpdatedAt.Default.(func() time.Time)
+	// sessionDescStopedAt is the schema descriptor for stoped_at field.
+	sessionDescStopedAt := sessionFields[5].Descriptor()
+	// session.DefaultStopedAt holds the default value on creation for the stoped_at field.
+	session.DefaultStopedAt = sessionDescStopedAt.Default.(func() time.Time)
+}
 
 const (
 	Version = "v0.14.4"                                         // Version of ent codegen.

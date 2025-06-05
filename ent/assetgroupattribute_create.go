@@ -46,9 +46,25 @@ func (agac *AssetGroupAttributeCreate) SetCreatedAt(t time.Time) *AssetGroupAttr
 	return agac
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (agac *AssetGroupAttributeCreate) SetNillableCreatedAt(t *time.Time) *AssetGroupAttributeCreate {
+	if t != nil {
+		agac.SetCreatedAt(*t)
+	}
+	return agac
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (agac *AssetGroupAttributeCreate) SetUpdatedAt(t time.Time) *AssetGroupAttributeCreate {
 	agac.mutation.SetUpdatedAt(t)
+	return agac
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (agac *AssetGroupAttributeCreate) SetNillableUpdatedAt(t *time.Time) *AssetGroupAttributeCreate {
+	if t != nil {
+		agac.SetUpdatedAt(*t)
+	}
 	return agac
 }
 
@@ -84,6 +100,9 @@ func (agac *AssetGroupAttributeCreate) Mutation() *AssetGroupAttributeMutation {
 
 // Save creates the AssetGroupAttribute in the database.
 func (agac *AssetGroupAttributeCreate) Save(ctx context.Context) (*AssetGroupAttribute, error) {
+	if err := agac.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, agac.sqlSave, agac.mutation, agac.hooks)
 }
 
@@ -107,6 +126,25 @@ func (agac *AssetGroupAttributeCreate) ExecX(ctx context.Context) {
 	if err := agac.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (agac *AssetGroupAttributeCreate) defaults() error {
+	if _, ok := agac.mutation.CreatedAt(); !ok {
+		if assetgroupattribute.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized assetgroupattribute.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := assetgroupattribute.DefaultCreatedAt()
+		agac.mutation.SetCreatedAt(v)
+	}
+	if _, ok := agac.mutation.UpdatedAt(); !ok {
+		if assetgroupattribute.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized assetgroupattribute.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := assetgroupattribute.DefaultUpdatedAt()
+		agac.mutation.SetUpdatedAt(v)
+	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -219,6 +257,7 @@ func (agacb *AssetGroupAttributeCreateBulk) Save(ctx context.Context) ([]*AssetG
 	for i := range agacb.builders {
 		func(i int, root context.Context) {
 			builder := agacb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AssetGroupAttributeMutation)
 				if !ok {
