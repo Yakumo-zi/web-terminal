@@ -108,8 +108,8 @@ func (agaq *AssetGroupAttributeQuery) FirstX(ctx context.Context) *AssetGroupAtt
 
 // FirstID returns the first AssetGroupAttribute ID from the query.
 // Returns a *NotFoundError when no AssetGroupAttribute ID was found.
-func (agaq *AssetGroupAttributeQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (agaq *AssetGroupAttributeQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = agaq.Limit(1).IDs(setContextOp(ctx, agaq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -121,7 +121,7 @@ func (agaq *AssetGroupAttributeQuery) FirstID(ctx context.Context) (id uuid.UUID
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (agaq *AssetGroupAttributeQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (agaq *AssetGroupAttributeQuery) FirstIDX(ctx context.Context) int {
 	id, err := agaq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -159,8 +159,8 @@ func (agaq *AssetGroupAttributeQuery) OnlyX(ctx context.Context) *AssetGroupAttr
 // OnlyID is like Only, but returns the only AssetGroupAttribute ID in the query.
 // Returns a *NotSingularError when more than one AssetGroupAttribute ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (agaq *AssetGroupAttributeQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (agaq *AssetGroupAttributeQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = agaq.Limit(2).IDs(setContextOp(ctx, agaq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -176,7 +176,7 @@ func (agaq *AssetGroupAttributeQuery) OnlyID(ctx context.Context) (id uuid.UUID,
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (agaq *AssetGroupAttributeQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (agaq *AssetGroupAttributeQuery) OnlyIDX(ctx context.Context) int {
 	id, err := agaq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -204,7 +204,7 @@ func (agaq *AssetGroupAttributeQuery) AllX(ctx context.Context) []*AssetGroupAtt
 }
 
 // IDs executes the query and returns a list of AssetGroupAttribute IDs.
-func (agaq *AssetGroupAttributeQuery) IDs(ctx context.Context) (ids []uuid.UUID, err error) {
+func (agaq *AssetGroupAttributeQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if agaq.ctx.Unique == nil && agaq.path != nil {
 		agaq.Unique(true)
 	}
@@ -216,7 +216,7 @@ func (agaq *AssetGroupAttributeQuery) IDs(ctx context.Context) (ids []uuid.UUID,
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (agaq *AssetGroupAttributeQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (agaq *AssetGroupAttributeQuery) IDsX(ctx context.Context) []int {
 	ids, err := agaq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -453,7 +453,7 @@ func (agaq *AssetGroupAttributeQuery) sqlCount(ctx context.Context) (int, error)
 }
 
 func (agaq *AssetGroupAttributeQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewQuerySpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt))
 	_spec.From = agaq.sql
 	if unique := agaq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

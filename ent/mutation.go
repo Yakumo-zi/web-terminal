@@ -45,8 +45,8 @@ type AssetMutation struct {
 	_type              *string
 	name               *string
 	ip                 *string
-	port               *int16
-	addport            *int16
+	port               *int
+	addport            *int
 	created_at         *time.Time
 	updated_at         *time.Time
 	clearedFields      map[string]struct{}
@@ -274,13 +274,13 @@ func (m *AssetMutation) ResetIP() {
 }
 
 // SetPort sets the "port" field.
-func (m *AssetMutation) SetPort(i int16) {
+func (m *AssetMutation) SetPort(i int) {
 	m.port = &i
 	m.addport = nil
 }
 
 // Port returns the value of the "port" field in the mutation.
-func (m *AssetMutation) Port() (r int16, exists bool) {
+func (m *AssetMutation) Port() (r int, exists bool) {
 	v := m.port
 	if v == nil {
 		return
@@ -291,7 +291,7 @@ func (m *AssetMutation) Port() (r int16, exists bool) {
 // OldPort returns the old "port" field's value of the Asset entity.
 // If the Asset object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AssetMutation) OldPort(ctx context.Context) (v int16, err error) {
+func (m *AssetMutation) OldPort(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldPort is only allowed on UpdateOne operations")
 	}
@@ -306,7 +306,7 @@ func (m *AssetMutation) OldPort(ctx context.Context) (v int16, err error) {
 }
 
 // AddPort adds i to the "port" field.
-func (m *AssetMutation) AddPort(i int16) {
+func (m *AssetMutation) AddPort(i int) {
 	if m.addport != nil {
 		*m.addport += i
 	} else {
@@ -315,7 +315,7 @@ func (m *AssetMutation) AddPort(i int16) {
 }
 
 // AddedPort returns the value that was added to the "port" field in this mutation.
-func (m *AssetMutation) AddedPort() (r int16, exists bool) {
+func (m *AssetMutation) AddedPort() (r int, exists bool) {
 	v := m.addport
 	if v == nil {
 		return
@@ -634,7 +634,7 @@ func (m *AssetMutation) SetField(name string, value ent.Value) error {
 		m.SetIP(v)
 		return nil
 	case asset.FieldPort:
-		v, ok := value.(int16)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -685,7 +685,7 @@ func (m *AssetMutation) AddedField(name string) (ent.Value, bool) {
 func (m *AssetMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case asset.FieldPort:
-		v, ok := value.(int16)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -863,8 +863,8 @@ type AssetGroupMutation struct {
 	assets        map[uuid.UUID]struct{}
 	removedassets map[uuid.UUID]struct{}
 	clearedassets bool
-	attrs         map[uuid.UUID]struct{}
-	removedattrs  map[uuid.UUID]struct{}
+	attrs         map[int]struct{}
+	removedattrs  map[int]struct{}
 	clearedattrs  bool
 	done          bool
 	oldValue      func(context.Context) (*AssetGroup, error)
@@ -1138,9 +1138,9 @@ func (m *AssetGroupMutation) ResetAssets() {
 }
 
 // AddAttrIDs adds the "attrs" edge to the AssetGroupAttribute entity by ids.
-func (m *AssetGroupMutation) AddAttrIDs(ids ...uuid.UUID) {
+func (m *AssetGroupMutation) AddAttrIDs(ids ...int) {
 	if m.attrs == nil {
-		m.attrs = make(map[uuid.UUID]struct{})
+		m.attrs = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.attrs[ids[i]] = struct{}{}
@@ -1158,9 +1158,9 @@ func (m *AssetGroupMutation) AttrsCleared() bool {
 }
 
 // RemoveAttrIDs removes the "attrs" edge to the AssetGroupAttribute entity by IDs.
-func (m *AssetGroupMutation) RemoveAttrIDs(ids ...uuid.UUID) {
+func (m *AssetGroupMutation) RemoveAttrIDs(ids ...int) {
 	if m.removedattrs == nil {
-		m.removedattrs = make(map[uuid.UUID]struct{})
+		m.removedattrs = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.attrs, ids[i])
@@ -1169,7 +1169,7 @@ func (m *AssetGroupMutation) RemoveAttrIDs(ids ...uuid.UUID) {
 }
 
 // RemovedAttrs returns the removed IDs of the "attrs" edge to the AssetGroupAttribute entity.
-func (m *AssetGroupMutation) RemovedAttrsIDs() (ids []uuid.UUID) {
+func (m *AssetGroupMutation) RemovedAttrsIDs() (ids []int) {
 	for id := range m.removedattrs {
 		ids = append(ids, id)
 	}
@@ -1177,7 +1177,7 @@ func (m *AssetGroupMutation) RemovedAttrsIDs() (ids []uuid.UUID) {
 }
 
 // AttrsIDs returns the "attrs" edge IDs in the mutation.
-func (m *AssetGroupMutation) AttrsIDs() (ids []uuid.UUID) {
+func (m *AssetGroupMutation) AttrsIDs() (ids []int) {
 	for id := range m.attrs {
 		ids = append(ids, id)
 	}
@@ -1471,7 +1471,7 @@ type AssetGroupAttributeMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uuid.UUID
+	id            *int
 	key           *string
 	value         *string
 	_type         *string
@@ -1505,7 +1505,7 @@ func newAssetGroupAttributeMutation(c config, op Op, opts ...assetgroupattribute
 }
 
 // withAssetGroupAttributeID sets the ID field of the mutation.
-func withAssetGroupAttributeID(id uuid.UUID) assetgroupattributeOption {
+func withAssetGroupAttributeID(id int) assetgroupattributeOption {
 	return func(m *AssetGroupAttributeMutation) {
 		var (
 			err   error
@@ -1557,13 +1557,13 @@ func (m AssetGroupAttributeMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of AssetGroupAttribute entities.
-func (m *AssetGroupAttributeMutation) SetID(id uuid.UUID) {
+func (m *AssetGroupAttributeMutation) SetID(id int) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *AssetGroupAttributeMutation) ID() (id uuid.UUID, exists bool) {
+func (m *AssetGroupAttributeMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1574,12 +1574,12 @@ func (m *AssetGroupAttributeMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *AssetGroupAttributeMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *AssetGroupAttributeMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):

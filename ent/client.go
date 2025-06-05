@@ -631,7 +631,7 @@ func (c *AssetGroupAttributeClient) UpdateOne(aga *AssetGroupAttribute) *AssetGr
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *AssetGroupAttributeClient) UpdateOneID(id uuid.UUID) *AssetGroupAttributeUpdateOne {
+func (c *AssetGroupAttributeClient) UpdateOneID(id int) *AssetGroupAttributeUpdateOne {
 	mutation := newAssetGroupAttributeMutation(c.config, OpUpdateOne, withAssetGroupAttributeID(id))
 	return &AssetGroupAttributeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -648,7 +648,7 @@ func (c *AssetGroupAttributeClient) DeleteOne(aga *AssetGroupAttribute) *AssetGr
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *AssetGroupAttributeClient) DeleteOneID(id uuid.UUID) *AssetGroupAttributeDeleteOne {
+func (c *AssetGroupAttributeClient) DeleteOneID(id int) *AssetGroupAttributeDeleteOne {
 	builder := c.Delete().Where(assetgroupattribute.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -665,12 +665,12 @@ func (c *AssetGroupAttributeClient) Query() *AssetGroupAttributeQuery {
 }
 
 // Get returns a AssetGroupAttribute entity by its id.
-func (c *AssetGroupAttributeClient) Get(ctx context.Context, id uuid.UUID) (*AssetGroupAttribute, error) {
+func (c *AssetGroupAttributeClient) Get(ctx context.Context, id int) (*AssetGroupAttribute, error) {
 	return c.Query().Where(assetgroupattribute.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *AssetGroupAttributeClient) GetX(ctx context.Context, id uuid.UUID) *AssetGroupAttribute {
+func (c *AssetGroupAttributeClient) GetX(ctx context.Context, id int) *AssetGroupAttribute {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

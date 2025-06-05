@@ -42,7 +42,7 @@ func (ac *AssetCreate) SetIP(s string) *AssetCreate {
 }
 
 // SetPort sets the "port" field.
-func (ac *AssetCreate) SetPort(i int16) *AssetCreate {
+func (ac *AssetCreate) SetPort(i int) *AssetCreate {
 	ac.mutation.SetPort(i)
 	return ac
 }
@@ -233,7 +233,7 @@ func (ac *AssetCreate) createSpec() (*Asset, *sqlgraph.CreateSpec) {
 		_node.IP = value
 	}
 	if value, ok := ac.mutation.Port(); ok {
-		_spec.SetField(asset.FieldPort, field.TypeInt16, value)
+		_spec.SetField(asset.FieldPort, field.TypeInt, value)
 		_node.Port = value
 	}
 	if value, ok := ac.mutation.CreatedAt(); ok {

@@ -23,7 +23,7 @@ func (Asset) Fields() []ent.Field {
 		field.String("type"),
 		field.String("name").Unique(),
 		field.String("ip").Unique(),
-		field.Int16("port"),
+		field.Int("port"),
 		field.Time("created_at").Default(time.Now),
 		field.Time("updated_at").Default(time.Now),
 	}

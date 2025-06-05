@@ -158,7 +158,7 @@ func (agau *AssetGroupAttributeUpdate) ExecX(ctx context.Context) {
 }
 
 func (agau *AssetGroupAttributeUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt))
 	if ps := agau.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -371,7 +371,7 @@ func (agauo *AssetGroupAttributeUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (agauo *AssetGroupAttributeUpdateOne) sqlSave(ctx context.Context) (_node *AssetGroupAttribute, err error) {
-	_spec := sqlgraph.NewUpdateSpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(assetgroupattribute.Table, assetgroupattribute.Columns, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt))
 	id, ok := agauo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "AssetGroupAttribute.id" for update`)}

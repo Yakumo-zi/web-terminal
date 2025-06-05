@@ -89,14 +89,14 @@ func (agu *AssetGroupUpdate) AddAssets(a ...*Asset) *AssetGroupUpdate {
 }
 
 // AddAttrIDs adds the "attrs" edge to the AssetGroupAttribute entity by IDs.
-func (agu *AssetGroupUpdate) AddAttrIDs(ids ...uuid.UUID) *AssetGroupUpdate {
+func (agu *AssetGroupUpdate) AddAttrIDs(ids ...int) *AssetGroupUpdate {
 	agu.mutation.AddAttrIDs(ids...)
 	return agu
 }
 
 // AddAttrs adds the "attrs" edges to the AssetGroupAttribute entity.
 func (agu *AssetGroupUpdate) AddAttrs(a ...*AssetGroupAttribute) *AssetGroupUpdate {
-	ids := make([]uuid.UUID, len(a))
+	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
 	}
@@ -136,14 +136,14 @@ func (agu *AssetGroupUpdate) ClearAttrs() *AssetGroupUpdate {
 }
 
 // RemoveAttrIDs removes the "attrs" edge to AssetGroupAttribute entities by IDs.
-func (agu *AssetGroupUpdate) RemoveAttrIDs(ids ...uuid.UUID) *AssetGroupUpdate {
+func (agu *AssetGroupUpdate) RemoveAttrIDs(ids ...int) *AssetGroupUpdate {
 	agu.mutation.RemoveAttrIDs(ids...)
 	return agu
 }
 
 // RemoveAttrs removes "attrs" edges to AssetGroupAttribute entities.
 func (agu *AssetGroupUpdate) RemoveAttrs(a ...*AssetGroupAttribute) *AssetGroupUpdate {
-	ids := make([]uuid.UUID, len(a))
+	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
 	}
@@ -248,7 +248,7 @@ func (agu *AssetGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -261,7 +261,7 @@ func (agu *AssetGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -277,7 +277,7 @@ func (agu *AssetGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -363,14 +363,14 @@ func (aguo *AssetGroupUpdateOne) AddAssets(a ...*Asset) *AssetGroupUpdateOne {
 }
 
 // AddAttrIDs adds the "attrs" edge to the AssetGroupAttribute entity by IDs.
-func (aguo *AssetGroupUpdateOne) AddAttrIDs(ids ...uuid.UUID) *AssetGroupUpdateOne {
+func (aguo *AssetGroupUpdateOne) AddAttrIDs(ids ...int) *AssetGroupUpdateOne {
 	aguo.mutation.AddAttrIDs(ids...)
 	return aguo
 }
 
 // AddAttrs adds the "attrs" edges to the AssetGroupAttribute entity.
 func (aguo *AssetGroupUpdateOne) AddAttrs(a ...*AssetGroupAttribute) *AssetGroupUpdateOne {
-	ids := make([]uuid.UUID, len(a))
+	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
 	}
@@ -410,14 +410,14 @@ func (aguo *AssetGroupUpdateOne) ClearAttrs() *AssetGroupUpdateOne {
 }
 
 // RemoveAttrIDs removes the "attrs" edge to AssetGroupAttribute entities by IDs.
-func (aguo *AssetGroupUpdateOne) RemoveAttrIDs(ids ...uuid.UUID) *AssetGroupUpdateOne {
+func (aguo *AssetGroupUpdateOne) RemoveAttrIDs(ids ...int) *AssetGroupUpdateOne {
 	aguo.mutation.RemoveAttrIDs(ids...)
 	return aguo
 }
 
 // RemoveAttrs removes "attrs" edges to AssetGroupAttribute entities.
 func (aguo *AssetGroupUpdateOne) RemoveAttrs(a ...*AssetGroupAttribute) *AssetGroupUpdateOne {
-	ids := make([]uuid.UUID, len(a))
+	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
 	}
@@ -552,7 +552,7 @@ func (aguo *AssetGroupUpdateOne) sqlSave(ctx context.Context) (_node *AssetGroup
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -565,7 +565,7 @@ func (aguo *AssetGroupUpdateOne) sqlSave(ctx context.Context) (_node *AssetGroup
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -581,7 +581,7 @@ func (aguo *AssetGroupUpdateOne) sqlSave(ctx context.Context) (_node *AssetGroup
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

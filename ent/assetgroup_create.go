@@ -79,14 +79,14 @@ func (agc *AssetGroupCreate) AddAssets(a ...*Asset) *AssetGroupCreate {
 }
 
 // AddAttrIDs adds the "attrs" edge to the AssetGroupAttribute entity by IDs.
-func (agc *AssetGroupCreate) AddAttrIDs(ids ...uuid.UUID) *AssetGroupCreate {
+func (agc *AssetGroupCreate) AddAttrIDs(ids ...int) *AssetGroupCreate {
 	agc.mutation.AddAttrIDs(ids...)
 	return agc
 }
 
 // AddAttrs adds the "attrs" edges to the AssetGroupAttribute entity.
 func (agc *AssetGroupCreate) AddAttrs(a ...*AssetGroupAttribute) *AssetGroupCreate {
-	ids := make([]uuid.UUID, len(a))
+	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
 	}
@@ -229,7 +229,7 @@ func (agc *AssetGroupCreate) createSpec() (*AssetGroup, *sqlgraph.CreateSpec) {
 			Columns: []string{assetgroup.AttrsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

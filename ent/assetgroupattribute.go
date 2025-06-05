@@ -18,7 +18,7 @@ import (
 type AssetGroupAttribute struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID uuid.UUID `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// Key holds the value of the "key" field.
 	Key string `json:"key,omitempty"`
 	// Value holds the value of the "value" field.
@@ -61,12 +61,12 @@ func (*AssetGroupAttribute) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case assetgroupattribute.FieldID:
+			values[i] = new(sql.NullInt64)
 		case assetgroupattribute.FieldKey, assetgroupattribute.FieldValue, assetgroupattribute.FieldType:
 			values[i] = new(sql.NullString)
 		case assetgroupattribute.FieldCreatedAt, assetgroupattribute.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case assetgroupattribute.FieldID:
-			values[i] = new(uuid.UUID)
 		case assetgroupattribute.ForeignKeys[0]: // asset_group_attrs
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
@@ -85,11 +85,11 @@ func (aga *AssetGroupAttribute) assignValues(columns []string, values []any) err
 	for i := range columns {
 		switch columns[i] {
 		case assetgroupattribute.FieldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value != nil {
-				aga.ID = *value
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			aga.ID = int(value.Int64)
 		case assetgroupattribute.FieldKey:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field key", values[i])

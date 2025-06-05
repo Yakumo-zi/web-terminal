@@ -1,5 +1,0 @@
-### GET request to example server
-GET http://127.0.0.1:8001/api/v1/
-X-Request-ID: 3
-
-###

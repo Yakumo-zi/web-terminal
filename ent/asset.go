@@ -25,7 +25,7 @@ type Asset struct {
 	// IP holds the value of the "ip" field.
 	IP string `json:"ip,omitempty"`
 	// Port holds the value of the "port" field.
-	Port int16 `json:"port,omitempty"`
+	Port int `json:"port,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -121,7 +121,7 @@ func (a *Asset) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field port", values[i])
 			} else if value.Valid {
-				a.Port = int16(value.Int64)
+				a.Port = int(value.Int64)
 			}
 		case asset.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {

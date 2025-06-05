@@ -69,8 +69,8 @@ func (agac *AssetGroupAttributeCreate) SetNillableUpdatedAt(t *time.Time) *Asset
 }
 
 // SetID sets the "id" field.
-func (agac *AssetGroupAttributeCreate) SetID(u uuid.UUID) *AssetGroupAttributeCreate {
-	agac.mutation.SetID(u)
+func (agac *AssetGroupAttributeCreate) SetID(i int) *AssetGroupAttributeCreate {
+	agac.mutation.SetID(i)
 	return agac
 }
 
@@ -178,12 +178,9 @@ func (agac *AssetGroupAttributeCreate) sqlSave(ctx context.Context) (*AssetGroup
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
 	}
 	agac.mutation.id = &_node.ID
 	agac.mutation.done = true
@@ -193,11 +190,11 @@ func (agac *AssetGroupAttributeCreate) sqlSave(ctx context.Context) (*AssetGroup
 func (agac *AssetGroupAttributeCreate) createSpec() (*AssetGroupAttribute, *sqlgraph.CreateSpec) {
 	var (
 		_node = &AssetGroupAttribute{config: agac.config}
-		_spec = sqlgraph.NewCreateSpec(assetgroupattribute.Table, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeUUID))
+		_spec = sqlgraph.NewCreateSpec(assetgroupattribute.Table, sqlgraph.NewFieldSpec(assetgroupattribute.FieldID, field.TypeInt))
 	)
 	if id, ok := agac.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := agac.mutation.Key(); ok {
 		_spec.SetField(assetgroupattribute.FieldKey, field.TypeString, value)
@@ -284,6 +281,10 @@ func (agacb *AssetGroupAttributeCreateBulk) Save(ctx context.Context) ([]*AssetG
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

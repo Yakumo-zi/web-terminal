@@ -7,7 +7,6 @@ import (
 	"entgo.io/ent/schema/field"
 	gen "github.com/Yakumo-zi/web-terminal/ent"
 	"github.com/Yakumo-zi/web-terminal/ent/hook"
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -19,7 +18,7 @@ type AssetGroupAttribute struct {
 // Fields of the AssetGroupAttribute.
 func (AssetGroupAttribute) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.New()).Unique(),
+		field.Int("id").Unique(),
 		field.String("key"),
 		field.String("value"),
 		field.String("type"),

@@ -14,7 +14,7 @@ var (
 		{Name: "type", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "ip", Type: field.TypeString, Unique: true},
-		{Name: "port", Type: field.TypeInt16},
+		{Name: "port", Type: field.TypeInt},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}
@@ -39,7 +39,7 @@ var (
 	}
 	// AssetGroupAttributesColumns holds the columns for the "asset_group_attributes" table.
 	AssetGroupAttributesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "key", Type: field.TypeString},
 		{Name: "value", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},

@@ -1,9 +1,12 @@
 package domain
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
 type Asset struct {
-	Id          string       `json:"id"`
+	Id          uuid.UUID    `json:"id"`
 	Type        string       `json:"type"`
 	Name        string       `json:"name"`
 	Port        int          `json:"port"`
@@ -15,7 +18,7 @@ type Asset struct {
 }
 
 type AssetGroup struct {
-	Id        string                `json:"id"`
+	Id        uuid.UUID             `json:"id"`
 	Name      string                `json:"name"`
 	Members   []Asset               `json:"members"`
 	Attr      []AssetGroupAttribute `json:"attrs"`
@@ -24,7 +27,7 @@ type AssetGroup struct {
 }
 
 type AssetGroupAttribute struct {
-	Id        string    `json:"id"`
+	Id        int       `json:"id"`
 	Key       string    `json:"key"`
 	Value     string    `json:"value"`
 	Type      string    `json:"type"`
@@ -33,7 +36,7 @@ type AssetGroupAttribute struct {
 }
 
 type Credential struct {
-	Id        string    `json:"id"`
+	Id        uuid.UUID `json:"id"`
 	Asset     Asset     `json:"asset"`
 	Type      string    `json:"type"`
 	Secret    string    `json:"secret"`
@@ -43,7 +46,7 @@ type Credential struct {
 }
 
 type Session struct {
-	Id         string     `json:"id"`
+	Id         uuid.UUID  `json:"id"`
 	Asset      Asset      `json:"asset"`
 	Credential Credential `json:"credential"`
 	Status     string     `json:"status"`

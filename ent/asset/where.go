@@ -72,7 +72,7 @@ func IP(v string) predicate.Asset {
 }
 
 // Port applies equality check predicate on the "port" field. It's identical to PortEQ.
-func Port(v int16) predicate.Asset {
+func Port(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldEQ(FieldPort, v))
 }
 
@@ -282,42 +282,42 @@ func IPContainsFold(v string) predicate.Asset {
 }
 
 // PortEQ applies the EQ predicate on the "port" field.
-func PortEQ(v int16) predicate.Asset {
+func PortEQ(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldEQ(FieldPort, v))
 }
 
 // PortNEQ applies the NEQ predicate on the "port" field.
-func PortNEQ(v int16) predicate.Asset {
+func PortNEQ(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldNEQ(FieldPort, v))
 }
 
 // PortIn applies the In predicate on the "port" field.
-func PortIn(vs ...int16) predicate.Asset {
+func PortIn(vs ...int) predicate.Asset {
 	return predicate.Asset(sql.FieldIn(FieldPort, vs...))
 }
 
 // PortNotIn applies the NotIn predicate on the "port" field.
-func PortNotIn(vs ...int16) predicate.Asset {
+func PortNotIn(vs ...int) predicate.Asset {
 	return predicate.Asset(sql.FieldNotIn(FieldPort, vs...))
 }
 
 // PortGT applies the GT predicate on the "port" field.
-func PortGT(v int16) predicate.Asset {
+func PortGT(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldGT(FieldPort, v))
 }
 
 // PortGTE applies the GTE predicate on the "port" field.
-func PortGTE(v int16) predicate.Asset {
+func PortGTE(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldGTE(FieldPort, v))
 }
 
 // PortLT applies the LT predicate on the "port" field.
-func PortLT(v int16) predicate.Asset {
+func PortLT(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldLT(FieldPort, v))
 }
 
 // PortLTE applies the LTE predicate on the "port" field.
-func PortLTE(v int16) predicate.Asset {
+func PortLTE(v int) predicate.Asset {
 	return predicate.Asset(sql.FieldLTE(FieldPort, v))
 }
 

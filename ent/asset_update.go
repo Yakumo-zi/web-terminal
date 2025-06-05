@@ -74,14 +74,14 @@ func (au *AssetUpdate) SetNillableIP(s *string) *AssetUpdate {
 }
 
 // SetPort sets the "port" field.
-func (au *AssetUpdate) SetPort(i int16) *AssetUpdate {
+func (au *AssetUpdate) SetPort(i int) *AssetUpdate {
 	au.mutation.ResetPort()
 	au.mutation.SetPort(i)
 	return au
 }
 
 // SetNillablePort sets the "port" field if the given value is not nil.
-func (au *AssetUpdate) SetNillablePort(i *int16) *AssetUpdate {
+func (au *AssetUpdate) SetNillablePort(i *int) *AssetUpdate {
 	if i != nil {
 		au.SetPort(*i)
 	}
@@ -89,7 +89,7 @@ func (au *AssetUpdate) SetNillablePort(i *int16) *AssetUpdate {
 }
 
 // AddPort adds i to the "port" field.
-func (au *AssetUpdate) AddPort(i int16) *AssetUpdate {
+func (au *AssetUpdate) AddPort(i int) *AssetUpdate {
 	au.mutation.AddPort(i)
 	return au
 }
@@ -245,10 +245,10 @@ func (au *AssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(asset.FieldIP, field.TypeString, value)
 	}
 	if value, ok := au.mutation.Port(); ok {
-		_spec.SetField(asset.FieldPort, field.TypeInt16, value)
+		_spec.SetField(asset.FieldPort, field.TypeInt, value)
 	}
 	if value, ok := au.mutation.AddedPort(); ok {
-		_spec.AddField(asset.FieldPort, field.TypeInt16, value)
+		_spec.AddField(asset.FieldPort, field.TypeInt, value)
 	}
 	if value, ok := au.mutation.CreatedAt(); ok {
 		_spec.SetField(asset.FieldCreatedAt, field.TypeTime, value)
@@ -409,14 +409,14 @@ func (auo *AssetUpdateOne) SetNillableIP(s *string) *AssetUpdateOne {
 }
 
 // SetPort sets the "port" field.
-func (auo *AssetUpdateOne) SetPort(i int16) *AssetUpdateOne {
+func (auo *AssetUpdateOne) SetPort(i int) *AssetUpdateOne {
 	auo.mutation.ResetPort()
 	auo.mutation.SetPort(i)
 	return auo
 }
 
 // SetNillablePort sets the "port" field if the given value is not nil.
-func (auo *AssetUpdateOne) SetNillablePort(i *int16) *AssetUpdateOne {
+func (auo *AssetUpdateOne) SetNillablePort(i *int) *AssetUpdateOne {
 	if i != nil {
 		auo.SetPort(*i)
 	}
@@ -424,7 +424,7 @@ func (auo *AssetUpdateOne) SetNillablePort(i *int16) *AssetUpdateOne {
 }
 
 // AddPort adds i to the "port" field.
-func (auo *AssetUpdateOne) AddPort(i int16) *AssetUpdateOne {
+func (auo *AssetUpdateOne) AddPort(i int) *AssetUpdateOne {
 	auo.mutation.AddPort(i)
 	return auo
 }
@@ -610,10 +610,10 @@ func (auo *AssetUpdateOne) sqlSave(ctx context.Context) (_node *Asset, err error
 		_spec.SetField(asset.FieldIP, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.Port(); ok {
-		_spec.SetField(asset.FieldPort, field.TypeInt16, value)
+		_spec.SetField(asset.FieldPort, field.TypeInt, value)
 	}
 	if value, ok := auo.mutation.AddedPort(); ok {
-		_spec.AddField(asset.FieldPort, field.TypeInt16, value)
+		_spec.AddField(asset.FieldPort, field.TypeInt, value)
 	}
 	if value, ok := auo.mutation.CreatedAt(); ok {
 		_spec.SetField(asset.FieldCreatedAt, field.TypeTime, value)
