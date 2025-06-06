@@ -9,7 +9,7 @@ import (
 )
 
 type DeleteCollectionRequest struct {
-	Ids []string `json:"ids",validate:"required,gt=0,dive,required,uuid"`
+	Ids []string `validate:"required,gt=0,dive,required,uuid",json:"ids"`
 }
 
 func (c *Controller) DeleteCollection(ctx echo.Context) error {

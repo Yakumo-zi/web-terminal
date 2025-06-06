@@ -9,11 +9,11 @@ import (
 )
 
 type UpdateRequest struct {
-	Id   string `json:"id",validate:"required,uuid"`
-	Name string `json:"name",validate:"required,max=255"`
-	Ip   string `json:"ip",validate:"required,ip"`
-	Port int    `json:"port",validate:"required,min=1,max=65535"`
-	Type string `json:"type",validate:"required,oneof=host db"`
+	Id   string `validate:"required,uuid",json:"id"`
+	Name string `validate:"required,max=255",json:"name"`
+	Ip   string `validate:"required,ip",json:"ip"`
+	Port int    `validate:"required,min=1,max=65535",json:"port"`
+	Type string `validate:"required,oneof=host db",json:"type"`
 }
 
 func (c *Controller) Update(ctx echo.Context) error {

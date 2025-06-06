@@ -8,8 +8,8 @@ import (
 )
 
 type ListRequest struct {
-	Offset int `json:"offset",validate:"required,gt=0"`
-	Limit  int `json:"limit",validate:"required,gt=0,lte=100"`
+	Offset int `validate:"gte=0",json:"offset"`
+	Limit  int `validate:"required,gt=0,lte=100",json:"id",`
 }
 
 type ListItem struct {

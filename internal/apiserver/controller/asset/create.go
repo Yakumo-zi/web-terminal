@@ -9,10 +9,10 @@ import (
 )
 
 type CreateRequest struct {
-	Name string `json:"name",validate:"required,max=255"`
-	Ip   string `json:"ip",validate:"required,ip"`
-	Port int    `json:"port",validate:"required,min=1,max=65535"`
-	Type string `json:"type",validate:"required,oneof=host db"`
+	Name string `validate:"required,max=255",json:"name"`
+	Ip   string `validate:"required,ip",json:"ip"`
+	Port int    `validate:"required,min=1,max=65535",json:"port"`
+	Type string `validate:"required,oneof=host db",json:"type"`
 }
 
 type CreateResponse struct {
@@ -25,7 +25,7 @@ func (c *Controller) Create(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	validator := util.GetValidator()
-	if err := validator.Struct(req); err != nil {
+	if err := validator.Struct(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	id := uuid.New()
