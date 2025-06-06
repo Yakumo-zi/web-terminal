@@ -1,7 +1,9 @@
 package constants
 
+type CtxKey string
+
 const (
-	CtxRequestIdKey string = "request_id"
-	CtxMethodKey    string = "method"
-	CtxPathKey      string = "path"
+	CtxRequestIdKey CtxKey = "request_id"
+	CtxMethodKey    CtxKey = "method"
+	CtxPathKey      CtxKey = "path"
 )

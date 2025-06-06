@@ -2,11 +2,12 @@ package middlewares
 
 import (
 	"context"
+	"log/slog"
+	"time"
+
 	"github.com/Yakumo-zi/web-terminal/pkg/web/constants"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"log/slog"
-	"time"
 )
 
 func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
@@ -39,7 +40,7 @@ func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 				slog.Int("status_code", c.Response().Status),
 				slog.Int64("latency", end.Sub(start).Milliseconds()),
 			)
-			return nil
+			return err
 		}
 	}
 }

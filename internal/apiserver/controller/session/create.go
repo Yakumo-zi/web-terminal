@@ -12,7 +12,7 @@ import (
 type CreateRequest struct {
 	AssetId string `validate:"required,uuid" json:"asset_id"`
 	CredId  string `validate:"required,uuid" json:"cred_id"`
-	Type    string `validate:"required,oneof=ssh rdp" json:"type"`
+	Type    string `validate:"required" json:"type"`
 	Status  string `validate:"required" json:"status"`
 }
 

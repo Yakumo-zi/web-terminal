@@ -9,13 +9,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/service"
 	"github.com/Yakumo-zi/web-terminal/pkg/logger"
-	"github.com/Yakumo-zi/web-terminal/pkg/web/middlewares"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -32,12 +32,7 @@ func randomName() string {
 func main() {
 	svc := service.NewService()
 	e := echo.New()
-	e.Use(middlewares.LoggerWithSlog(logger.Log()))
-	asset.RegisterRoutes(e, svc)
-	asset_group.RegisterRoutes(e, svc)
-	credential.RegisterRoutes(e, svc)
-	session.RegisterRoutes(e, svc)
-
+	controller.RegisterRoutes(e, svc)
 	// 测试 Asset
 	fmt.Println("测试 Asset...")
 	assetCreateReq := asset.CreateRequest{

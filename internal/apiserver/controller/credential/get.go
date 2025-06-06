@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Yakumo-zi/web-terminal/internal/util"
+	"github.com/Yakumo-zi/web-terminal/pkg/logger"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -29,6 +30,7 @@ func (c *Controller) Get(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	logger.Log().InfoContext(ctx.Request().Context(), "request ", "req", req)
 	cid, err := uuid.Parse(req.Id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

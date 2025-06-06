@@ -3,14 +3,15 @@ package asset
 import (
 	"net/http"
 
+	"github.com/Yakumo-zi/web-terminal/internal/util"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type ByGroupRequest struct {
-	ID     uuid.UUID `query:"id" validate:"required"`
-	Offset int       `query:"offset"`
-	Limit  int       `query:"limit"`
+	ID     string `query:"id" validate:"required"`
+	Offset int    `query:"offset"`
+	Limit  int    `query:"limit"`
 }
 
 func (c *Controller) ByGroup(ctx echo.Context) error {
@@ -23,12 +24,16 @@ func (c *Controller) ByGroup(ctx echo.Context) error {
 	if req.Limit == 0 {
 		req.Limit = 20
 	}
-
-	if err := ctx.Validate(&req); err != nil {
+	validator := util.GetValidator()
+	if err := validator.Struct(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+	}
+	id, err := uuid.Parse(req.ID)
+	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 	}
 
-	assets, count, err := c.svc.GetByGroup(ctx.Request().Context(), req.ID, req.Offset, req.Limit)
+	assets, count, err := c.svc.GetByGroup(ctx.Request().Context(), id, req.Offset, req.Limit)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

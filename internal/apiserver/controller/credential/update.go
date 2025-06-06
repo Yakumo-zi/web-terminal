@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateRequest struct {
-	Id       string `validate:"required,uuid" json:"id"`
+	Id       string `validate:"required,uuid" param:"id"`
 	Type     string `validate:"required,oneof=password key" json:"type"`
 	Username string `validate:"required,max=255" json:"username"`
 	Secret   string `validate:"required" json:"secret"`
