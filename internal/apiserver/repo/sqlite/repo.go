@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"github.com/Yakumo-zi/web-terminal/ent"
+	_ "github.com/Yakumo-zi/web-terminal/ent/runtime"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/repo"
 )
 

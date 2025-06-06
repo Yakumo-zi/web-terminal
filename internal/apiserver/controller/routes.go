@@ -1,28 +1,29 @@
 package controller
 
 import (
-	"fmt"
+	"github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/service"
+	"github.com/Yakumo-zi/web-terminal/pkg/logger"
 	"github.com/Yakumo-zi/web-terminal/pkg/web/middlewares"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func RegisterRoutes(e *echo.Echo, svc *service.Service) {
-	apiV1 := e.Group("/api/v1")
-	apiV1.Use(middlewares.LoggerWithSlog(svc.WebLogger))
-	apiV1.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello World")
-	})
-	userV1 := apiV1.Group("/user")
-	userV1.GET("/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		return c.String(http.StatusOK, id)
-	})
-	errorV1 := apiV1.Group("/error")
-	errorV1.GET("/:code", func(c echo.Context) error {
-		code := c.Param("code")
-		c.Response().WriteHeader(http.StatusBadRequest)
-		return fmt.Errorf("it's a error code: %s", code)
-	})
+	apiV1 := e.Group("/Api/V1")
+	apiV1.Use(middlewares.LoggerWithSlog(logger.Log()))
+	RegisterAssetRoutes(apiV1, svc)
+}
+
+func RegisterAssetRoutes(e *echo.Group, svc *service.Service) {
+	assetV1 := e.Group("/Assets")
+	assetController := asset.NewController(svc)
+	{
+		assetV1.GET("/", assetController.List)
+		assetV1.GET("/:id", assetController.Get)
+		assetV1.POST("/", assetController.Create)
+		assetV1.POST("/:id", assetController.Update)
+		assetV1.DELETE("/:id", assetController.Delete)
+		assetV1.DELETE("/Collection", assetController.DeleteCollection)
+	}
+
 }

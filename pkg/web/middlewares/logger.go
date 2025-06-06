@@ -20,6 +20,8 @@ func LoggerWithSlog(logger *slog.Logger) echo.MiddlewareFunc {
 			ctx = context.WithValue(ctx, constants.CtxRequestIdKey, requestId)
 			ctx = context.WithValue(ctx, constants.CtxMethodKey, c.Request().Method)
 			ctx = context.WithValue(ctx, constants.CtxPathKey, c.Request().URL.Path)
+			req := c.Request().WithContext(ctx)
+			c.SetRequest(req)
 			start := time.Now()
 			err := next(c)
 			if err != nil {
