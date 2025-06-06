@@ -9,7 +9,7 @@ import (
 )
 
 type DeleteRequest struct {
-	Id string `validate:"required,uuid" param:"id"`
+	Id string `validate:"required,uuid" json:"id"`
 }
 
 func (c *Controller) Delete(ctx echo.Context) error {

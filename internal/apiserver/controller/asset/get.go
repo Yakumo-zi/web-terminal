@@ -9,7 +9,7 @@ import (
 )
 
 type GetRequest struct {
-	Id string `validate:"required,uuid" param:"id"`
+	Id string `validate:"required,uuid" query:"id"`
 }
 
 type GetResponse struct {

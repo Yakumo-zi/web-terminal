@@ -9,9 +9,9 @@ import (
 )
 
 type ByGroupRequest struct {
-	ID     string `query:"id" validate:"required"`
-	Offset int    `query:"offset"`
-	Limit  int    `query:"limit"`
+	ID     string `json:"id" validate:"required"`
+	Offset int    `json:"offset"`
+	Limit  int    `json:"limit"`
 }
 
 func (c *Controller) ByGroup(ctx echo.Context) error {
@@ -33,13 +33,21 @@ func (c *Controller) ByGroup(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 	}
 
-	assets, count, err := c.svc.GetByGroup(ctx.Request().Context(), id, req.Offset, req.Limit)
+	assets, count, err := c.svc.GetByGroup(ctx.Request().Context(), id, req.Limit, req.Offset)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
-
-	return ctx.JSON(http.StatusOK, map[string]interface{}{
-		"items": assets,
-		"count": count,
-	})
+	var listResponse ListResponse
+	listResponse.Items = make([]ListItem, len(assets))
+	for i, asset := range assets {
+		listResponse.Items[i] = ListItem{
+			Id:   asset.Id.String(),
+			Name: asset.Name,
+			Ip:   asset.Ip,
+			Port: asset.Port,
+			Type: asset.Type,
+		}
+	}
+	listResponse.Total = count
+	return ctx.JSON(http.StatusOK, listResponse)
 }

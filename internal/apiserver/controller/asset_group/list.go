@@ -9,8 +9,8 @@ import (
 )
 
 type ListRequest struct {
-	Offset int `validate:"gte=0" query:"offset"`
-	Limit  int `validate:"required,gt=0,lte=100" query:"limit"`
+	Offset int `validate:"gte=0" json:"offset"`
+	Limit  int `validate:"required,gt=0,lte=100" json:"limit"`
 }
 
 type ListItem struct {

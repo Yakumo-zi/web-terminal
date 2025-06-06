@@ -1,0 +1,147 @@
+[
+  {
+    "method": "POST",
+    "path": "/Api/V1/Sessions/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).Update-fm"
+  },
+  {
+    "method": "DELETE",
+    "path": "/Api/V1/Sessions/Collection",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).DeleteCollection-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/AssetGroups/Create",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).Create-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/AssetGroups/Delete",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).Delete-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Credentials",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).Create-fm"
+  },
+  {
+    "method": "DELETE",
+    "path": "/Api/V1/Credentials/Collection",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).DeleteCollection-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/AssetGroups/Get",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).Get-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Sessions/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).Get-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Sessions/ByAsset",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).ByAsset-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Assets/List",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).List-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Assets/Collection",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).DeleteCollection-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Assets/WithoutGroup",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).WithoutGroup-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/AssetGroups/List",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).List-fm"
+  },
+  {
+    "method": "DELETE",
+    "path": "/Api/V1/Sessions/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).Delete-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Assets/Create",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).Create-fm"
+  },
+  {
+    "method": "DELETE",
+    "path": "/Api/V1/Credentials/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).Delete-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/AssetGroups/Update",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).Update-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/AssetGroups/Collection",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).DeleteCollection-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Credentials",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).List-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Credentials/ByAsset",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).ByAsset-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Assets/Get",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).Get-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Assets/Update",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).Update-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Assets/ByGroup",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).ByGroup-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Credentials/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).Get-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Credentials/:id",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/credential.(*Controller).Update-fm"
+  },
+  {
+    "method": "GET",
+    "path": "/Api/V1/Sessions",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).List-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Assets/Delete",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset.(*Controller).Delete-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/AssetGroups/AddMembers",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/asset_group.(*Controller).AddMembers-fm"
+  },
+  {
+    "method": "POST",
+    "path": "/Api/V1/Sessions",
+    "name": "github.com/Yakumo-zi/web-terminal/internal/apiserver/controller/session.(*Controller).Create-fm"
+  }
+]

@@ -17,11 +17,11 @@ func NewController(svc *service.Service) *Controller {
 
 func RegisterRoutes(e *echo.Echo, svc *service.Service) {
 	controller := NewController(svc)
-	e.POST("/Api/V1/AssetGroups", controller.Create)
-	e.GET("/Api/V1/AssetGroups/:id", controller.Get)
-	e.GET("/Api/V1/AssetGroups", controller.List)
-	e.POST("/Api/V1/AssetGroups/:id", controller.Update)
-	e.DELETE("/Api/V1/AssetGroups/:id", controller.Delete)
-	e.DELETE("/Api/V1/AssetGroups/Collection", controller.DeleteCollection)
+	e.GET("/Api/V1/AssetGroups/Get", controller.Get)
+	e.GET("/Api/V1/AssetGroups/List", controller.List)
+	e.POST("/Api/V1/AssetGroups/Create", controller.Create)
 	e.POST("/Api/V1/AssetGroups/AddMembers", controller.AddMembers)
+	e.POST("/Api/V1/AssetGroups/Update", controller.Update)
+	e.POST("/Api/V1/AssetGroups/Delete", controller.Delete)
+	e.POST("/Api/V1/AssetGroups/Collection", controller.DeleteCollection)
 }

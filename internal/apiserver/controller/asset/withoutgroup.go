@@ -7,8 +7,8 @@ import (
 )
 
 type WithoutGroupRequest struct {
-	Offset int `query:"offset"`
-	Limit  int `query:"limit"`
+	Offset int `query:"offset" validate:"gte=0"`
+	Limit  int `query:"limit"  validate:"required,gt=0,lte=100"`
 }
 
 func (c *Controller) WithoutGroup(ctx echo.Context) error {
@@ -26,9 +26,17 @@ func (c *Controller) WithoutGroup(ctx echo.Context) error {
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
-
-	return ctx.JSON(http.StatusOK, map[string]interface{}{
-		"items": assets,
-		"count": count,
-	})
+	var listResponse ListResponse
+	listResponse.Items = make([]ListItem, len(assets))
+	for i, asset := range assets {
+		listResponse.Items[i] = ListItem{
+			Id:   asset.Id.String(),
+			Name: asset.Name,
+			Ip:   asset.Ip,
+			Port: asset.Port,
+			Type: asset.Type,
+		}
+	}
+	listResponse.Total = count
+	return ctx.JSON(http.StatusOK, listResponse)
 }
