@@ -1,15 +1,16 @@
 package asset
 
 import (
+	"net/http"
+
 	"github.com/Yakumo-zi/web-terminal/internal/util"
 	"github.com/Yakumo-zi/web-terminal/pkg/logger"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type DeleteCollectionRequest struct {
-	Ids []string `validate:"required,gt=0,dive,required,uuid",json:"ids"`
+	Ids []string `validate:"required,gt=0,dive,required,uuid" json:"ids"`
 }
 
 func (c *Controller) DeleteCollection(ctx echo.Context) error {
@@ -30,9 +31,6 @@ func (c *Controller) DeleteCollection(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 		aids = append(aids, uid)
-	}
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	err = c.svc.DeleteCollection(ctx.Request().Context(), aids)
 	if err != nil {

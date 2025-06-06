@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/Yakumo-zi/web-terminal/ent/asset"
 	"github.com/Yakumo-zi/web-terminal/ent/credential"
 	"github.com/google/uuid"
 )
@@ -71,6 +72,25 @@ func (cc *CredentialCreate) SetNillableUpdatedAt(t *time.Time) *CredentialCreate
 func (cc *CredentialCreate) SetID(u uuid.UUID) *CredentialCreate {
 	cc.mutation.SetID(u)
 	return cc
+}
+
+// SetAssetID sets the "asset" edge to the Asset entity by ID.
+func (cc *CredentialCreate) SetAssetID(id uuid.UUID) *CredentialCreate {
+	cc.mutation.SetAssetID(id)
+	return cc
+}
+
+// SetNillableAssetID sets the "asset" edge to the Asset entity by ID if the given value is not nil.
+func (cc *CredentialCreate) SetNillableAssetID(id *uuid.UUID) *CredentialCreate {
+	if id != nil {
+		cc = cc.SetAssetID(*id)
+	}
+	return cc
+}
+
+// SetAsset sets the "asset" edge to the Asset entity.
+func (cc *CredentialCreate) SetAsset(a *Asset) *CredentialCreate {
+	return cc.SetAssetID(a.ID)
 }
 
 // Mutation returns the CredentialMutation object of the builder.
@@ -198,6 +218,23 @@ func (cc *CredentialCreate) createSpec() (*Credential, *sqlgraph.CreateSpec) {
 	if value, ok := cc.mutation.UpdatedAt(); ok {
 		_spec.SetField(credential.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := cc.mutation.AssetIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   credential.AssetTable,
+			Columns: []string{credential.AssetColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(asset.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.asset_credentials = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

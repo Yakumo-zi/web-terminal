@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/Yakumo-zi/web-terminal/ent/predicate"
 	"github.com/google/uuid"
 )
@@ -353,6 +354,29 @@ func UpdatedAtLT(v time.Time) predicate.Credential {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Credential {
 	return predicate.Credential(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// HasAsset applies the HasEdge predicate on the "asset" edge.
+func HasAsset() predicate.Credential {
+	return predicate.Credential(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AssetTable, AssetColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAssetWith applies the HasEdge predicate on the "asset" edge with a given conditions (other predicates).
+func HasAssetWith(preds ...predicate.Asset) predicate.Credential {
+	return predicate.Credential(func(s *sql.Selector) {
+		step := newAssetStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

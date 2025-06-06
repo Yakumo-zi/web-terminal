@@ -29,7 +29,7 @@ type Session struct {
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// StopedAt holds the value of the "stoped_at" field.
-	StopedAt time.Time `json:"stoped_at,omitempty"`
+	StopedAt *time.Time `json:"stoped_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SessionQuery when eager-loading is set.
 	Edges              SessionEdges `json:"edges"`
@@ -135,7 +135,8 @@ func (s *Session) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field stoped_at", values[i])
 			} else if value.Valid {
-				s.StopedAt = value.Time
+				s.StopedAt = new(time.Time)
+				*s.StopedAt = value.Time
 			}
 		case session.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
@@ -209,8 +210,10 @@ func (s *Session) String() string {
 	builder.WriteString("updated_at=")
 	builder.WriteString(s.UpdatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("stoped_at=")
-	builder.WriteString(s.StopedAt.Format(time.ANSIC))
+	if v := s.StopedAt; v != nil {
+		builder.WriteString("stoped_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/Yakumo-zi/web-terminal/ent/asset"
 	"github.com/Yakumo-zi/web-terminal/ent/credential"
 	"github.com/Yakumo-zi/web-terminal/ent/predicate"
 	"github.com/google/uuid"
@@ -23,6 +24,7 @@ type CredentialQuery struct {
 	order      []credential.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Credential
+	withAsset  *AssetQuery
 	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -58,6 +60,28 @@ func (cq *CredentialQuery) Unique(unique bool) *CredentialQuery {
 func (cq *CredentialQuery) Order(o ...credential.OrderOption) *CredentialQuery {
 	cq.order = append(cq.order, o...)
 	return cq
+}
+
+// QueryAsset chains the current query on the "asset" edge.
+func (cq *CredentialQuery) QueryAsset() *AssetQuery {
+	query := (&AssetClient{config: cq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := cq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(credential.Table, credential.FieldID, selector),
+			sqlgraph.To(asset.Table, asset.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, credential.AssetTable, credential.AssetColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Credential entity from the query.
@@ -252,10 +276,22 @@ func (cq *CredentialQuery) Clone() *CredentialQuery {
 		order:      append([]credential.OrderOption{}, cq.order...),
 		inters:     append([]Interceptor{}, cq.inters...),
 		predicates: append([]predicate.Credential{}, cq.predicates...),
+		withAsset:  cq.withAsset.Clone(),
 		// clone intermediate query.
 		sql:  cq.sql.Clone(),
 		path: cq.path,
 	}
+}
+
+// WithAsset tells the query-builder to eager-load the nodes that are connected to
+// the "asset" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CredentialQuery) WithAsset(opts ...func(*AssetQuery)) *CredentialQuery {
+	query := (&AssetClient{config: cq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withAsset = query
+	return cq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -334,10 +370,16 @@ func (cq *CredentialQuery) prepareQuery(ctx context.Context) error {
 
 func (cq *CredentialQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Credential, error) {
 	var (
-		nodes   = []*Credential{}
-		withFKs = cq.withFKs
-		_spec   = cq.querySpec()
+		nodes       = []*Credential{}
+		withFKs     = cq.withFKs
+		_spec       = cq.querySpec()
+		loadedTypes = [1]bool{
+			cq.withAsset != nil,
+		}
 	)
+	if cq.withAsset != nil {
+		withFKs = true
+	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, credential.ForeignKeys...)
 	}
@@ -347,6 +389,7 @@ func (cq *CredentialQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*C
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Credential{config: cq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -358,7 +401,46 @@ func (cq *CredentialQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*C
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := cq.withAsset; query != nil {
+		if err := cq.loadAsset(ctx, query, nodes, nil,
+			func(n *Credential, e *Asset) { n.Edges.Asset = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (cq *CredentialQuery) loadAsset(ctx context.Context, query *AssetQuery, nodes []*Credential, init func(*Credential), assign func(*Credential, *Asset)) error {
+	ids := make([]uuid.UUID, 0, len(nodes))
+	nodeids := make(map[uuid.UUID][]*Credential)
+	for i := range nodes {
+		if nodes[i].asset_credentials == nil {
+			continue
+		}
+		fk := *nodes[i].asset_credentials
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(asset.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "asset_credentials" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (cq *CredentialQuery) sqlCount(ctx context.Context) (int, error) {

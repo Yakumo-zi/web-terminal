@@ -41,6 +41,14 @@ func (sc *SessionCreate) SetCreatedAt(t time.Time) *SessionCreate {
 	return sc
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sc *SessionCreate) SetNillableCreatedAt(t *time.Time) *SessionCreate {
+	if t != nil {
+		sc.SetCreatedAt(*t)
+	}
+	return sc
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (sc *SessionCreate) SetUpdatedAt(t time.Time) *SessionCreate {
 	sc.mutation.SetUpdatedAt(t)
@@ -58,14 +66,6 @@ func (sc *SessionCreate) SetNillableUpdatedAt(t *time.Time) *SessionCreate {
 // SetStopedAt sets the "stoped_at" field.
 func (sc *SessionCreate) SetStopedAt(t time.Time) *SessionCreate {
 	sc.mutation.SetStopedAt(t)
-	return sc
-}
-
-// SetNillableStopedAt sets the "stoped_at" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableStopedAt(t *time.Time) *SessionCreate {
-	if t != nil {
-		sc.SetStopedAt(*t)
-	}
 	return sc
 }
 
@@ -150,19 +150,19 @@ func (sc *SessionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (sc *SessionCreate) defaults() error {
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		if session.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized session.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := session.DefaultCreatedAt()
+		sc.mutation.SetCreatedAt(v)
+	}
 	if _, ok := sc.mutation.UpdatedAt(); !ok {
 		if session.DefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized session.DefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
 		v := session.DefaultUpdatedAt()
 		sc.mutation.SetUpdatedAt(v)
-	}
-	if _, ok := sc.mutation.StopedAt(); !ok {
-		if session.DefaultStopedAt == nil {
-			return fmt.Errorf("ent: uninitialized session.DefaultStopedAt (forgotten import ent/runtime?)")
-		}
-		v := session.DefaultStopedAt()
-		sc.mutation.SetStopedAt(v)
 	}
 	return nil
 }
@@ -237,7 +237,7 @@ func (sc *SessionCreate) createSpec() (*Session, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := sc.mutation.StopedAt(); ok {
 		_spec.SetField(session.FieldStopedAt, field.TypeTime, value)
-		_node.StopedAt = value
+		_node.StopedAt = &value
 	}
 	if nodes := sc.mutation.AssetIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

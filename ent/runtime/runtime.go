@@ -69,14 +69,14 @@ func init() {
 	session.Hooks[0] = sessionHooks[0]
 	sessionFields := schema.Session{}.Fields()
 	_ = sessionFields
+	// sessionDescCreatedAt is the schema descriptor for created_at field.
+	sessionDescCreatedAt := sessionFields[3].Descriptor()
+	// session.DefaultCreatedAt holds the default value on creation for the created_at field.
+	session.DefaultCreatedAt = sessionDescCreatedAt.Default.(func() time.Time)
 	// sessionDescUpdatedAt is the schema descriptor for updated_at field.
 	sessionDescUpdatedAt := sessionFields[4].Descriptor()
 	// session.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	session.DefaultUpdatedAt = sessionDescUpdatedAt.Default.(func() time.Time)
-	// sessionDescStopedAt is the schema descriptor for stoped_at field.
-	sessionDescStopedAt := sessionFields[5].Descriptor()
-	// session.DefaultStopedAt holds the default value on creation for the stoped_at field.
-	session.DefaultStopedAt = sessionDescStopedAt.Default.(func() time.Time)
 }
 
 const (

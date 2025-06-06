@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/Yakumo-zi/web-terminal/ent/asset"
 	"github.com/Yakumo-zi/web-terminal/ent/credential"
 	"github.com/google/uuid"
 )
@@ -27,9 +28,32 @@ type Credential struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt         time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the CredentialQuery when eager-loading is set.
+	Edges             CredentialEdges `json:"edges"`
 	asset_credentials *uuid.UUID
 	selectValues      sql.SelectValues
+}
+
+// CredentialEdges holds the relations/edges for other nodes in the graph.
+type CredentialEdges struct {
+	// Asset holds the value of the asset edge.
+	Asset *Asset `json:"asset,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// AssetOrErr returns the Asset value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CredentialEdges) AssetOrErr() (*Asset, error) {
+	if e.Asset != nil {
+		return e.Asset, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: asset.Label}
+	}
+	return nil, &NotLoadedError{edge: "asset"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -114,6 +138,11 @@ func (c *Credential) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (c *Credential) Value(name string) (ent.Value, error) {
 	return c.selectValues.Get(name)
+}
+
+// QueryAsset queries the "asset" edge of the Credential entity.
+func (c *Credential) QueryAsset() *AssetQuery {
+	return NewCredentialClient(c.config).QueryAsset(c)
 }
 
 // Update returns a builder for updating this Credential.

@@ -86,10 +86,10 @@ func ValidColumn(column string) bool {
 //	import _ "github.com/Yakumo-zi/web-terminal/ent/runtime"
 var (
 	Hooks [1]ent.Hook
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt func() time.Time
-	// DefaultStopedAt holds the default value on creation for the "stoped_at" field.
-	DefaultStopedAt func() time.Time
 )
 
 // OrderOption defines the ordering options for the Session queries.

@@ -2,13 +2,14 @@ package schema
 
 import (
 	"context"
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	gen "github.com/Yakumo-zi/web-terminal/ent"
 	"github.com/Yakumo-zi/web-terminal/ent/hook"
 	"github.com/google/uuid"
-	"time"
 )
 
 // Session holds the schema definition for the Session entity.
@@ -22,9 +23,9 @@ func (Session) Fields() []ent.Field {
 		field.UUID("id", uuid.New()).Unique(),
 		field.String("status"),
 		field.String("type"),
-		field.Time("created_at"),
+		field.Time("created_at").Default(time.Now),
 		field.Time("updated_at").Default(time.Now),
-		field.Time("stoped_at").Default(time.Now),
+		field.Time("stoped_at").Nillable().Default(nil),
 	}
 }
 

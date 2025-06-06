@@ -11,14 +11,27 @@ type SqliteRepository struct {
 }
 
 func NewSqliteRepository(client *ent.Client) *SqliteRepository {
-
 	return &SqliteRepository{
 		client: client,
 	}
 }
-func (s SqliteRepository) Assets() repo.AssetRepository {
-	return newAssetRepo(s.client.Asset)
+
+func (r *SqliteRepository) Assets() repo.AssetRepository {
+	return newAssetRepository(r.client)
 }
+
+func (r *SqliteRepository) AssetGroups() repo.AssetGroupRepository {
+	return newAssetGroupRepository(r.client)
+}
+
+func (r *SqliteRepository) Credentials() repo.CredentialRepository {
+	return newCredentialRepository(r.client)
+}
+
+func (r *SqliteRepository) Sessions() repo.SessionRepository {
+	return newSessionRepository(r.client)
+}
+
 func (s *SqliteRepository) Close() error {
 	return s.client.Close()
 }

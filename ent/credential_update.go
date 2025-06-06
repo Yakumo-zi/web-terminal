@@ -11,8 +11,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/Yakumo-zi/web-terminal/ent/asset"
 	"github.com/Yakumo-zi/web-terminal/ent/credential"
 	"github.com/Yakumo-zi/web-terminal/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // CredentialUpdate is the builder for updating Credential entities.
@@ -98,9 +100,34 @@ func (cu *CredentialUpdate) SetNillableUpdatedAt(t *time.Time) *CredentialUpdate
 	return cu
 }
 
+// SetAssetID sets the "asset" edge to the Asset entity by ID.
+func (cu *CredentialUpdate) SetAssetID(id uuid.UUID) *CredentialUpdate {
+	cu.mutation.SetAssetID(id)
+	return cu
+}
+
+// SetNillableAssetID sets the "asset" edge to the Asset entity by ID if the given value is not nil.
+func (cu *CredentialUpdate) SetNillableAssetID(id *uuid.UUID) *CredentialUpdate {
+	if id != nil {
+		cu = cu.SetAssetID(*id)
+	}
+	return cu
+}
+
+// SetAsset sets the "asset" edge to the Asset entity.
+func (cu *CredentialUpdate) SetAsset(a *Asset) *CredentialUpdate {
+	return cu.SetAssetID(a.ID)
+}
+
 // Mutation returns the CredentialMutation object of the builder.
 func (cu *CredentialUpdate) Mutation() *CredentialMutation {
 	return cu.mutation
+}
+
+// ClearAsset clears the "asset" edge to the Asset entity.
+func (cu *CredentialUpdate) ClearAsset() *CredentialUpdate {
+	cu.mutation.ClearAsset()
+	return cu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -153,6 +180,35 @@ func (cu *CredentialUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := cu.mutation.UpdatedAt(); ok {
 		_spec.SetField(credential.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if cu.mutation.AssetCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   credential.AssetTable,
+			Columns: []string{credential.AssetColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(asset.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.AssetIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   credential.AssetTable,
+			Columns: []string{credential.AssetColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(asset.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -244,9 +300,34 @@ func (cuo *CredentialUpdateOne) SetNillableUpdatedAt(t *time.Time) *CredentialUp
 	return cuo
 }
 
+// SetAssetID sets the "asset" edge to the Asset entity by ID.
+func (cuo *CredentialUpdateOne) SetAssetID(id uuid.UUID) *CredentialUpdateOne {
+	cuo.mutation.SetAssetID(id)
+	return cuo
+}
+
+// SetNillableAssetID sets the "asset" edge to the Asset entity by ID if the given value is not nil.
+func (cuo *CredentialUpdateOne) SetNillableAssetID(id *uuid.UUID) *CredentialUpdateOne {
+	if id != nil {
+		cuo = cuo.SetAssetID(*id)
+	}
+	return cuo
+}
+
+// SetAsset sets the "asset" edge to the Asset entity.
+func (cuo *CredentialUpdateOne) SetAsset(a *Asset) *CredentialUpdateOne {
+	return cuo.SetAssetID(a.ID)
+}
+
 // Mutation returns the CredentialMutation object of the builder.
 func (cuo *CredentialUpdateOne) Mutation() *CredentialMutation {
 	return cuo.mutation
+}
+
+// ClearAsset clears the "asset" edge to the Asset entity.
+func (cuo *CredentialUpdateOne) ClearAsset() *CredentialUpdateOne {
+	cuo.mutation.ClearAsset()
+	return cuo
 }
 
 // Where appends a list predicates to the CredentialUpdate builder.
@@ -329,6 +410,35 @@ func (cuo *CredentialUpdateOne) sqlSave(ctx context.Context) (_node *Credential,
 	}
 	if value, ok := cuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(credential.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if cuo.mutation.AssetCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   credential.AssetTable,
+			Columns: []string{credential.AssetColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(asset.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.AssetIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   credential.AssetTable,
+			Columns: []string{credential.AssetColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(asset.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Credential{config: cuo.config}
 	_spec.Assign = _node.assignValues

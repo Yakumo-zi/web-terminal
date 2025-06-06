@@ -1,19 +1,20 @@
 package asset
 
 import (
+	"net/http"
+
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/domain"
 	"github.com/Yakumo-zi/web-terminal/internal/util"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type UpdateRequest struct {
-	Id   string `validate:"required,uuid",json:"id"`
-	Name string `validate:"required,max=255",json:"name"`
-	Ip   string `validate:"required,ip",json:"ip"`
-	Port int    `validate:"required,min=1,max=65535",json:"port"`
-	Type string `validate:"required,oneof=host db",json:"type"`
+	Id   string `validate:"required,uuid" json:"id"`
+	Name string `validate:"required,max=255" json:"name"`
+	Ip   string `validate:"required,ip" json:"ip"`
+	Port int    `validate:"required,min=1,max=65535" json:"port"`
+	Type string `validate:"required,oneof=host db" json:"type"`
 }
 
 func (c *Controller) Update(ctx echo.Context) error {
@@ -39,5 +40,5 @@ func (c *Controller) Update(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return ctx.JSON(http.StatusCreated, struct{}{})
+	return ctx.JSON(http.StatusOK, struct{}{})
 }

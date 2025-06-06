@@ -1,14 +1,15 @@
 package asset
 
 import (
+	"net/http"
+
 	"github.com/Yakumo-zi/web-terminal/internal/util"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type DeletetRequest struct {
-	Id string `validate:"required,uuid",param:"id"`
+	Id string `validate:"required,uuid" param:"id"`
 }
 
 func (c *Controller) Delete(ctx echo.Context) error {

@@ -828,6 +828,22 @@ func (c *CredentialClient) GetX(ctx context.Context, id uuid.UUID) *Credential {
 	return obj
 }
 
+// QueryAsset queries the asset edge of a Credential.
+func (c *CredentialClient) QueryAsset(cr *Credential) *AssetQuery {
+	query := (&AssetClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := cr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(credential.Table, credential.FieldID, id),
+			sqlgraph.To(asset.Table, asset.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, credential.AssetTable, credential.AssetColumn),
+		)
+		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CredentialClient) Hooks() []Hook {
 	hooks := c.hooks.Credential

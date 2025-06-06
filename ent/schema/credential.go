@@ -2,12 +2,14 @@ package schema
 
 import (
 	"context"
+	"time"
+
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	gen "github.com/Yakumo-zi/web-terminal/ent"
 	"github.com/Yakumo-zi/web-terminal/ent/hook"
 	"github.com/google/uuid"
-	"time"
 )
 
 // Credential holds the schema definition for the Credential entity.
@@ -29,7 +31,9 @@ func (Credential) Fields() []ent.Field {
 
 // Edges of the Credential.
 func (Credential) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("asset", Asset.Type).Ref("credentials").Unique(),
+	}
 }
 
 func (Credential) Hooks() []ent.Hook {

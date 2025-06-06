@@ -1,15 +1,16 @@
 package asset
 
 import (
+	"net/http"
+
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/service"
 	"github.com/Yakumo-zi/web-terminal/internal/util"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type ListRequest struct {
-	Offset int `validate:"gte=0",json:"offset"`
-	Limit  int `validate:"required,gt=0,lte=100",json:"id",`
+	Offset int `validate:"gte=0" query:"offset"`
+	Limit  int `validate:"required,gt=0,lte=100" query:"limit"`
 }
 
 type ListItem struct {

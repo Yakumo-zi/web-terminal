@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/domain"
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/repo"
 	"github.com/google/uuid"
@@ -14,6 +15,8 @@ type AssetService interface {
 	DeleteCollection(context.Context, []uuid.UUID) error
 	Get(context.Context, uuid.UUID) (*domain.Asset, error)
 	List(context.Context, *ListOptions) ([]*domain.Asset, int, error)
+	GetByGroup(context.Context, uuid.UUID, int, int) ([]*domain.Asset, int, error)
+	GetWithoutGroup(context.Context, int, int) ([]*domain.Asset, int, error)
 }
 
 type assetService struct {
@@ -48,4 +51,12 @@ func (a *assetService) Get(ctx context.Context, s uuid.UUID) (*domain.Asset, err
 
 func (a *assetService) List(ctx context.Context, options *ListOptions) ([]*domain.Asset, int, error) {
 	return a.repo.List(ctx, &repo.ListOptions{Limit: options.Limit, Offset: options.Offset})
+}
+
+func (a *assetService) GetByGroup(ctx context.Context, groupID uuid.UUID, limit, offset int) ([]*domain.Asset, int, error) {
+	return a.repo.GetByGroup(ctx, groupID, limit, offset)
+}
+
+func (a *assetService) GetWithoutGroup(ctx context.Context, limit, offset int) ([]*domain.Asset, int, error) {
+	return a.repo.GetWithoutGroup(ctx, limit, offset)
 }

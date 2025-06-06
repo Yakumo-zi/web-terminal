@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+
 	"github.com/Yakumo-zi/web-terminal/internal/apiserver/domain"
 	"github.com/google/uuid"
 )
@@ -13,4 +14,6 @@ type AssetRepository interface {
 	DeleteCollection(context.Context, []uuid.UUID) error
 	Get(context.Context, uuid.UUID) (*domain.Asset, error)
 	List(context.Context, *ListOptions) ([]*domain.Asset, int, error)
+	GetByGroup(context.Context, uuid.UUID, int, int) ([]*domain.Asset, int, error)
+	GetWithoutGroup(context.Context, int, int) ([]*domain.Asset, int, error)
 }

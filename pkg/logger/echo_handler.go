@@ -2,8 +2,9 @@ package logger
 
 import (
 	"context"
-	"github.com/Yakumo-zi/web-terminal/pkg/web/constants"
 	"log/slog"
+
+	"github.com/Yakumo-zi/web-terminal/pkg/web/constants"
 )
 
 type echoSlogHandler struct {
@@ -11,10 +12,16 @@ type echoSlogHandler struct {
 }
 
 func (h *echoSlogHandler) Handle(ctx context.Context, r slog.Record) error {
+	if ctx.Value(constants.CtxRequestIdKey) == nil {
+		return h.Handler.Handle(ctx, r)
+	}
+	request_id := ctx.Value(constants.CtxRequestIdKey)
+	method := ctx.Value(constants.CtxMethodKey)
+	path := ctx.Value(constants.CtxPathKey)
 	attr := slog.Group("request",
-		slog.String("request_id", ctx.Value(constants.CtxRequestIdKey).(string)),
-		slog.String("method", ctx.Value(constants.CtxMethodKey).(string)),
-		slog.String("path", ctx.Value(constants.CtxPathKey).(string)),
+		slog.String("request_id", request_id.(string)),
+		slog.String("method", method.(string)),
+		slog.String("path", path.(string)),
 	)
 	r.Add(attr)
 	return h.Handler.Handle(ctx, r)

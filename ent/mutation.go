@@ -2093,6 +2093,8 @@ type CredentialMutation struct {
 	created_at    *time.Time
 	updated_at    *time.Time
 	clearedFields map[string]struct{}
+	asset         *uuid.UUID
+	clearedasset  bool
 	done          bool
 	oldValue      func(context.Context) (*Credential, error)
 	predicates    []predicate.Credential
@@ -2382,6 +2384,45 @@ func (m *CredentialMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 }
 
+// SetAssetID sets the "asset" edge to the Asset entity by id.
+func (m *CredentialMutation) SetAssetID(id uuid.UUID) {
+	m.asset = &id
+}
+
+// ClearAsset clears the "asset" edge to the Asset entity.
+func (m *CredentialMutation) ClearAsset() {
+	m.clearedasset = true
+}
+
+// AssetCleared reports if the "asset" edge to the Asset entity was cleared.
+func (m *CredentialMutation) AssetCleared() bool {
+	return m.clearedasset
+}
+
+// AssetID returns the "asset" edge ID in the mutation.
+func (m *CredentialMutation) AssetID() (id uuid.UUID, exists bool) {
+	if m.asset != nil {
+		return *m.asset, true
+	}
+	return
+}
+
+// AssetIDs returns the "asset" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// AssetID instead. It exists only for internal usage by the builders.
+func (m *CredentialMutation) AssetIDs() (ids []uuid.UUID) {
+	if id := m.asset; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAsset resets all changes to the "asset" edge.
+func (m *CredentialMutation) ResetAsset() {
+	m.asset = nil
+	m.clearedasset = false
+}
+
 // Where appends a list predicates to the CredentialMutation builder.
 func (m *CredentialMutation) Where(ps ...predicate.Credential) {
 	m.predicates = append(m.predicates, ps...)
@@ -2583,19 +2624,28 @@ func (m *CredentialMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *CredentialMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.asset != nil {
+		edges = append(edges, credential.EdgeAsset)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *CredentialMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case credential.EdgeAsset:
+		if id := m.asset; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CredentialMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -2607,25 +2657,42 @@ func (m *CredentialMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *CredentialMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedasset {
+		edges = append(edges, credential.EdgeAsset)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *CredentialMutation) EdgeCleared(name string) bool {
+	switch name {
+	case credential.EdgeAsset:
+		return m.clearedasset
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *CredentialMutation) ClearEdge(name string) error {
+	switch name {
+	case credential.EdgeAsset:
+		m.ClearAsset()
+		return nil
+	}
 	return fmt.Errorf("unknown Credential unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *CredentialMutation) ResetEdge(name string) error {
+	switch name {
+	case credential.EdgeAsset:
+		m.ResetAsset()
+		return nil
+	}
 	return fmt.Errorf("unknown Credential edge %s", name)
 }
 
@@ -2915,7 +2982,7 @@ func (m *SessionMutation) StopedAt() (r time.Time, exists bool) {
 // OldStopedAt returns the old "stoped_at" field's value of the Session entity.
 // If the Session object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SessionMutation) OldStopedAt(ctx context.Context) (v time.Time, err error) {
+func (m *SessionMutation) OldStopedAt(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStopedAt is only allowed on UpdateOne operations")
 	}
